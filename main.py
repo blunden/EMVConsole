@@ -23,7 +23,7 @@ for app in applications:
 	print "[ ]", str(index) + ".", "".join(map(unichr, app[1])), "(" + toHexString(app[0]) + ")"
 	index += 1
 	
-print "[?] Which application nigga? ",
+print "[?] Select application: ",
 a = int(stdin.readline())
 
 response, sw1, sw2 = func.selectApplication(applications[a-1][0])
