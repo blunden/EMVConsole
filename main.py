@@ -30,6 +30,18 @@ response, sw1, sw2 = func.selectApplication(applications[a-1][0])
 
 #
 
+if ("".join(map(chr, app[1])) == "VISA"):
+	print "Card information:"
+
+	name, number, expires_short, created, expires_actual, sc = func.getVISACardinfo(VISA_AID)
+
+	print "Name: ", name
+	print "Number: ", number
+	print "Expires (front):", expires_short
+	print "Created: ", created
+	print "Expires (actual): ", expires_actual
+	print "Service code: ", sc
+
 
 print "Pin tries left:", func.getPinRetriesLeft()
 
@@ -53,9 +65,7 @@ records = []
 for record in records:
 	#print toHexString(record)
 	func.readRecord(record)
-	#print "Response: ", toHexString(response), "status words: ", "%.2x %.2x" % (sw1, sw2)
-
-print func.getPinRetriesLeft()                   
+	#print "Response: ", toHexString(response), "status words: ", "%.2x %.2x" % (sw1, sw2)                 
 
 
 atcres = func.getATCCounter()
@@ -97,7 +107,8 @@ if proceed == "y\n":
 	ttype = [0x00]
 	unpredictable = [randint(0, 0xFF), randint(0, 0xFF), randint(0, 0xFF), randint(0, 0xFF)]
 
+	print "Generating TC..."
+
 	response, sw1, sw2 = func.generateTC(amount, terminalcc, tvr, transactioncc, date, ttype, unpredictable)
 
 	print "Response: ", toHexString(response), "status words: ", "%.2x %.2x" % (sw1, sw2)
-

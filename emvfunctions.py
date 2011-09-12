@@ -156,3 +156,23 @@ class EmvFunctions(SmartFunctions):
 			response, sw1, sw2 = self.getResponse(sw2)
 		
 		return response, sw1, sw2
+
+	def getVISACardinfo(self, aid):
+		response, sw1, sw2 = self.select(VISA_AID)
+		response, sw1, sw2 = self.getResponse(sw2)
+		response, sw1, sw2 = self.readRecord(VISA1)
+
+		name = ""
+		for letter in response[51:]:
+			name = name + chr(letter)
+
+		number = toHexString(response[31:39])
+		expires_short = toHexString([(response[40]<<4)+(response[41]>>4), (response[39]<<4)+(response[40]>>4)])
+		sc = toHexString([response[41]&0x0f, response[42]])
+
+		response, sw1, sw2 = self.readRecord(VISA2)
+
+		created = "20" + toHexString([response[11]]) + "-" +toHexString([response[12]]) + "-" + toHexString([response[13]])
+		expires_actual = "20" + toHexString([response[5]]) + "-" +toHexString([response[6]]) + "-" + toHexString([response[7]])
+
+		return name, number, expires_short, created, expires_actual, sc 
