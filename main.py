@@ -81,7 +81,7 @@ if (sw1 == 0x90 and sw2 == 0x00):
 else:
 	print "Pin verification failed!"
 	print "Response: ", toHexString(response), "status words: ", "%.2x %.2x" % (sw1, sw2)
-#	exit()
+	exit()
 
 print "Do you want to do a transaction? (y/n)"
 proceed = stdin.readline()
