@@ -23,7 +23,7 @@ for app in applications:
 	print "[ ]", str(index) + ".", "".join(map(unichr, app[1])), "(" + toHexString(app[0]) + ")"
 	index += 1
 	
-print "[?] Select application: ",
+print "[?] Which application? ",
 a = int(stdin.readline())
 
 response, sw1, sw2 = func.selectApplication(applications[a-1][0])
@@ -34,20 +34,20 @@ response, sw1, sw2 = func.selectApplication(applications[a-1][0])
 print "Pin tries left:", func.getPinRetriesLeft()
 
 
-#pdol = func.selectPaymentApplication(applications[a-1][0])
+pdol = func.selectPaymentApplication(applications[a-1][0])
 
 
 #print "PDOL: ", toHexString(pdol)
 
 pdol_enc = COUNTRY_CODE_SWEDEN + CURRENCY_CODE_SWEDEN
 
-#afl = func.getAFL([0x83, 0x04] + pdol_enc)
+afl = func.getAFL([0x83, 0x04] + pdol_enc)
 
 
 
 #aip = func.getAIP([0x83, 0x04] + pdol_enc)
 
-#records = func.getRecords(afl)
+records = func.getRecords(afl)
 
 records = []
 for record in records:
@@ -74,26 +74,30 @@ pin = [p1, p2]
 
 
 response, sw1, sw2 = func.verify(pin)
-#print "Response: ", toHexString(response), "status words: ", "%.2x %.2x" % (sw1, sw2)
+print "Response: ", toHexString(response), "status words: ", "%.2x %.2x" % (sw1, sw2)
 
 if (sw1 == 0x90 and sw2 == 0x00):
 	print "Pin verification succeeded!"
 else:
 	print "Pin verification failed!"
 	print "Response: ", toHexString(response), "status words: ", "%.2x %.2x" % (sw1, sw2)
-	exit()
+#	exit()
 
+print "Do you want to do a transaction? (y/n)"
+proceed = stdin.readline()
+if proceed == "y\n":
 
-amount = [0x00, 0x00, 0x00, 0x00, 0x10, 0x00]
-terminalcc = COUNTRY_CODE_SWEDEN
-tvr = [0x00, 0x80, 0x00, 0x00, 0x00]
-transactioncc = CURRENCY_CODE_SWEDEN
-# 2010-03-30
-date = [0x10, 0x03, 0x30]
-ttype = [0x00]
-unpredictable = [randint(0, 0xFF), randint(0, 0xFF), randint(0, 0xFF), randint(0, 0xFF)]
+	amount = [0x00, 0x00, 0x00, 0x00, 0x10, 0x00]
+	terminalcc = COUNTRY_CODE_SWEDEN
+	tvr = [0x00, 0x80, 0x00, 0x00, 0x00]
+	transactioncc = CURRENCY_CODE_SWEDEN
 
-#response, sw1, sw2 = func.generateTC(amount, terminalcc, tvr, transactioncc, date, ttype, unpredictable)
+	# 2011-01-26
+	date = [0x11, 0x01, 0x26]
+	ttype = [0x00]
+	unpredictable = [randint(0, 0xFF), randint(0, 0xFF), randint(0, 0xFF), randint(0, 0xFF)]
 
-#print "Response: ", toHexString(response), "status words: ", "%.2x %.2x" % (sw1, sw2)
+	response, sw1, sw2 = func.generateTC(amount, terminalcc, tvr, transactioncc, date, ttype, unpredictable)
+
+	print "Response: ", toHexString(response), "status words: ", "%.2x %.2x" % (sw1, sw2)
 
