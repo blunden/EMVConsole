@@ -28,9 +28,9 @@ a = int(stdin.readline())
 
 response, sw1, sw2 = func.selectApplication(applications[a-1][0])
 
-#
+# Attempt to read VISA card info if VISA card detected
 
-if ("".join(map(chr, app[1])) == "VISA"):
+if ("".join(map(chr, app[1])) == VISA_APPL_LABEL):
 	print "Card information:"
 
 	name, number, expires_short, created, expires_actual, sc = func.getVISACardinfo(VISA_AID)
